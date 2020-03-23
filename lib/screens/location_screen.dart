@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:clima/utilities/constants.dart';
 import '../services/weather.dart';
@@ -19,7 +21,7 @@ class _LocationScreenState extends State<LocationScreen> {
   String iconUrl;
   String description;
   int humidity;
-  double windSpeed;
+  int windSpeed;
   int pressure;
   String conditions;
   int realfeel;
@@ -55,10 +57,11 @@ class _LocationScreenState extends State<LocationScreen> {
 
   void updateUI(dynamic currentWeather) {
     setState(() {
+      print(currentWeather);
       if (currentWeather != null) {
-        double temp = currentWeather['main']['temp'];
+        double temp = currentWeather['main']['temp'].toDouble();
         temperature = temp.toInt();
-        temp = currentWeather['main']['feels_like'];
+        temp = currentWeather['main']['feels_like'].toDouble();
         realfeel = temp.toInt();
         icon = currentWeather['weather'][0]['icon'];
         iconUrl = kIconUrl.replaceFirst('{icon}', icon);
@@ -67,7 +70,7 @@ class _LocationScreenState extends State<LocationScreen> {
         city = currentWeather['name'];
         humidity = currentWeather['main']['humidity'];
         // Convert wind speed to kph
-        windSpeed = currentWeather['wind']['speed'] * 3.6;
+        windSpeed = (currentWeather['wind']['speed'] * 3.6).toInt();
         pressure = currentWeather['main']['pressure'];
         clouds = currentWeather['clouds']['all'];
       } else {
@@ -187,6 +190,9 @@ class _LocationScreenState extends State<LocationScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
+                          SizedBox(
+                            width: 5.0,
+                          ),
                           Column(
                             children: <Widget>[
                               Text(
@@ -255,6 +261,9 @@ class _LocationScreenState extends State<LocationScreen> {
                                 style: kForecastTextStyle,
                               ),
                             ],
+                          ),
+                          SizedBox(
+                            width: 5.0,
                           ),
                         ],
                       ),
